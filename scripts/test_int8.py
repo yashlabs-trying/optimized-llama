@@ -2,7 +2,7 @@ import traceback
 from vllm import LLM, SamplingParams
 try:
     llm = LLM(model="/workspace/models/llama-3.2-3b-hf",
-              quantization="bitsandbytes", load_format="bitsandbytes",
+              quantization="int8_per_channel_weight_only",
               dtype="float16", enforce_eager=True)
     sp = SamplingParams(max_tokens=8, temperature=0.0)
     out = llm.generate(["The capital of France is"], sp, use_tqdm=False)
