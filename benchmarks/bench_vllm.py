@@ -33,6 +33,7 @@ def main():
     ap.add_argument("--quantization", default="none")
     ap.add_argument("--num-prompts", type=int, default=128)
     ap.add_argument("--max-tokens", type=int, default=128)
+    ap.add_argument("--output", default="")
     args = ap.parse_args()
 
     from vllm import LLM, SamplingParams
@@ -58,7 +59,10 @@ def main():
         "throughput_tok_s": total_tokens / wall if wall else 0,
         "requests_per_s": args.num_prompts / wall if wall else 0,
     }
-    print(json.dumps(result, indent=2))
+    out = args.output if args.output else "/workspace/vllm_result.json"
+    with open(out, "w") as f:
+        json.dump(result, f, indent=2)
+    print("RESULT_FILE=" + out)
 
 
 if __name__ == "__main__":
