@@ -1,22 +1,19 @@
 #!/usr/bin/env bash
-# GPU environment setup for optimized-llama (NVIDIA A40 / Ampere, CUDA 12.8)
+# Rebuild environment on fresh RunPod A40 pod (venv lives on overlay, lost on restart)
 set -euo pipefail
 
-echo "==> Creating venv"
-python3 -m venv .venv
-source .venv/bin/activate
+echo "==> venv"
+python3 -m venv /opt/venv
+source /opt/venv/bin/activate
 
-echo "==> Upgrading pip"
-pip install --upgrade pip wheel setuptools
+echo "==> pip upgrade"
+pip install --upgrade pip wheel setuptools -q
 
-echo "==> Installing core inference stack"
-pip install torch --index-url https://download.pytorch.org/whl/cu128
-pip install vllm transformers accelerate sentencepiece datasets
+echo "==> torch (cu128)"
+pip install torch --index-url https://download.pytorch.org/whl/cu128 -q
 
-echo "==> Installing quantization tooling (INT8 / SmoothQuant)"
-pip install bitsandbytes llm-compressor
+echo "==> vllm + transformers + quant + gguf"
+pip install vllm transformers accelerate sentencepiece datasets bitsandbytes gguf -q
 
-echo "==> Installing benchmarking tooling"
-pip install numpy pandas matplotlib
-
-echo "==> Done. Activate with: source .venv/bin/activate"
+echo "==> done"
+/opt/venv/bin/python -c "import torch, vllm, transformers, gguf; print('torch', torch.__version__, 'vllm', vllm.__version__, 'transformers', transformers.__version__)"
