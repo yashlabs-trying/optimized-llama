@@ -39,8 +39,7 @@ def main():
     from vllm import LLM, SamplingParams
 
     quant = None if args.quantization in ("none", "", "None") else args.quantization
-    llm = LLM(model=args.model, quantization=quant, dtype="auto",
-              enforce_eager=True)
+    llm = LLM(model=args.model, quantization=quant, dtype="auto")
     sp = SamplingParams(max_tokens=args.max_tokens, temperature=0.0)
 
     prompts = [random.choice(POOL) for _ in range(args.num_prompts)]
