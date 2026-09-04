@@ -16,4 +16,6 @@ async def main():
 try:
     asyncio.run(main())
 except Exception:
-    traceback.print_exc()
+    with open("/workspace/err.txt", "w") as f:
+        traceback.print_exc(file=f)
+    print("ERR")
