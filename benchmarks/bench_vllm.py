@@ -34,8 +34,9 @@ async def run_async(model: str, quantization: str, num_prompts: int,
                     max_tokens: int, concurrency: int):
     from vllm import AsyncLLMEngine, SamplingParams, EngineArgs
 
+    quant = None if quantization in ("none", "", "None") else quantization
     engine = AsyncLLMEngine.from_engine_args(
-        EngineArgs(model=model, quantization=quantization, dtype="auto",
+        EngineArgs(model=model, quantization=quant, dtype="auto",
                    enforce_eager=True)
     )
     sp = SamplingParams(max_tokens=max_tokens, temperature=0.0,
